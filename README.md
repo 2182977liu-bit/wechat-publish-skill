@@ -46,6 +46,8 @@ article.wechat.html   ← 复制 → 公众号正文粘贴
 wechat-publish-skill/
 ├── README.md
 ├── LICENSE
+├── install.sh                    ← Unix/macOS 一键安装
+├── install.ps1                   ← Windows 一键安装
 ├── skills/
 │   ├── wechat-publish/          ← 主 Skill（推荐安装这个）
 │   │   ├── SKILL.md
@@ -66,7 +68,82 @@ wechat-publish-skill/
 
 ## 快速开始
 
-### 1. 安装 Skill
+### 0. 智能体自动安装（推荐）
+
+让 Claude Code / Codex / 其它 Agent **自己装**，不必你手动复制文件。
+
+#### 对 Agent 说（可直接粘贴）
+
+```text
+请安装 GitHub 上的 wechat-publish-skill：
+
+仓库：https://github.com/2182977liu-bit/wechat-publish-skill
+
+要求：
+1. 把 skills/wechat-publish 安装到本机技能根目录（如 ~/.claude/skills/wechat-publish 或客户端等价路径）
+2. 确认 SKILL.md 的 name 为 wechat-publish
+3. 验证：node <技能目录>/scripts/convert.js --help 可运行
+4. 可选：一并安装 skills/wechat-content
+不要安装 tool/ 除非我明确要求。
+```
+
+#### Agent 安装步骤（给智能体照做）
+
+1. **探测技能根目录**（按存在项优先）：
+
+   | 优先级 | 路径 |
+   |--------|------|
+   | 1 | `%USERPROFILE%\.claude\skills`（Windows）/ `~/.claude/skills` |
+   | 2 | `%USERPROFILE%\.local\share\mimocode\...` 下客户端 skills 根（若存在） |
+   | 3 | 用户指定的项目级 `<project>/.claude/skills` |
+
+2. **拉取仓库**（浅克隆即可）：
+
+   ```bash
+   git clone --depth 1 https://github.com/2182977liu-bit/wechat-publish-skill.git /tmp/wechat-publish-skill
+   ```
+
+3. **只复制 Skill 目录**（不要整仓丢进 skills）：
+
+   ```bash
+   # Unix / macOS / Git Bash
+   mkdir -p ~/.claude/skills
+   cp -R /tmp/wechat-publish-skill/skills/wechat-publish ~/.claude/skills/wechat-publish
+   ```
+
+   ```powershell
+   # Windows PowerShell
+   $root = Join-Path $env:USERPROFILE ".claude\skills"
+   New-Item -ItemType Directory -Force -Path $root | Out-Null
+   Copy-Item -Recurse -Force "$clone\skills\wechat-publish" (Join-Path $root "wechat-publish")
+   ```
+
+4. **校验**：
+
+   ```bash
+   test -f ~/.claude/skills/wechat-publish/SKILL.md
+   node ~/.claude/skills/wechat-publish/scripts/convert.js --help
+   ```
+
+5. **告知用户**：已安装；**新开会话**后触发词才会生效（如「转公众号」「公众号排版」）。
+
+#### 仓库自带安装脚本
+
+克隆后可直接执行：
+
+```bash
+# Unix / macOS
+./install.sh
+```
+
+```powershell
+# Windows
+.\install.ps1
+```
+
+脚本会：定位技能根 → 复制 `wechat-publish`（可选 `-Content` 装细则）→ 运行 `convert.js --help` 自检。
+
+### 1. 安装 Skill（手动）
 
 把主技能目录复制到客户端技能根目录：
 
