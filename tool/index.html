@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>公众号注入 — MD/HTML 转微信排版</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">公</div>
+      <div>
+        <span class="brand-title">公众号注入</span>
+        <span class="brand-sub">MD / HTML → 微信排版</span>
+      </div>
+    </div>
+
+    <div class="seg" id="mode-seg">
+      <button type="button" id="mode-md" class="active">Markdown</button>
+      <button type="button" id="mode-html">HTML</button>
+    </div>
+
+    <div class="field">
+      <label for="theme-select">主题</label>
+      <select id="theme-select"></select>
+      <span class="theme-desc" id="theme-desc"></span>
+    </div>
+
+    <div class="spacer"></div>
+
+    <button type="button" class="btn" id="btn-load-sample">示例</button>
+    <button type="button" class="btn" id="btn-clear">清空</button>
+    <button type="button" class="btn" id="btn-file">上传文件</button>
+    <input type="file" id="file-input" accept=".md,.markdown,.html,.htm" hidden />
+    <button type="button" class="btn" id="btn-open-mp">打开公众号后台</button>
+    <button type="button" class="btn primary" id="btn-convert">转换预览</button>
+  </header>
+
+  <main class="main">
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">源内容</div>
+        <div class="panel-tools">
+          <span class="meta-bar" style="border:none;background:transparent;padding:0;">
+            字数 <strong id="char-count">0</strong>
+          </span>
+        </div>
+      </div>
+      <div class="panel-body">
+        <textarea id="source-input" placeholder="在此粘贴 Markdown 或 HTML，或点击上方「上传文件」…&#10;&#10;Markdown 支持：标题、加粗/斜体、删除线、行内代码、代码块、引用、有序/无序列表、表格、图片、链接、分割线。"></textarea>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div class="panel-title">公众号预览（模拟手机宽度）</div>
+        <div class="panel-tools">
+          <button type="button" class="btn" id="btn-convert-right">转换</button>
+          <button type="button" class="btn" id="btn-embed">外链图转内嵌</button>
+          <button type="button" class="btn primary" id="btn-copy">复制到剪贴板</button>
+          <label class="meta-field">标题 <input type="text" id="meta-title" placeholder="文章标题" /></label>
+          <label class="meta-field">作者 <input type="text" id="meta-author" placeholder="作者" value="松君杂货铺" /></label>
+          <button type="button" class="btn" id="btn-detect">检测登录账号</button>
+          <button type="button" class="btn" id="btn-open-article">自动打开新建图文</button>
+          <button type="button" class="btn" id="btn-copy-snippet">生成注入代码</button>
+          <button type="button" class="btn" id="btn-semi">半自动注入</button>
+          <button type="button" class="btn" id="btn-download">下载 HTML</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <iframe id="preview-frame" title="preview"></iframe>
+      </div>
+      <div class="meta-bar">
+        <span>图片 <strong id="img-count">0</strong></span>
+        <span>链接 <strong id="link-count">0</strong></span>
+        <span>主题样式：全部内联，符合公众号编辑器白名单</span>
+      </div>
+      <div class="warnings" id="warnings"></div>
+    </section>
+  </main>
+
+  <div class="snippet-box hidden" id="snippet-box">
+    <div class="snippet-head">
+      <span>Console 代码 — 必须贴在【已登录】的 mp.weixin.qq.com 后台标签页（F12 → Console），不要贴在本地工具页；注入前会先检测账号</span>
+      <span class="spacer"></span>
+      <button type="button" id="btn-copy-snippet-2" onclick="document.getElementById('snippet-text').select();document.execCommand('copy');">复制</button>
+    </div>
+    <textarea id="snippet-text" readonly></textarea>
+  </div>
+
+  <footer class="footer">
+    <span class="status ok" id="status-bar">就绪</span>
+    <span>使用流程：转换 → 复制 → 公众号编辑器 Ctrl+V；或「检测账号 / 生成注入代码」→ F12 Console</span>
+    <span class="help"><a href="#" id="help-link">使用说明</a></span>
+  </footer>
+
+  <div class="modal-backdrop" id="help-modal">
+    <div class="modal">
+      <h3>使用说明</h3>
+      <p>本工具把 Markdown 或 HTML 转成<b>公众号兼容的内联样式 HTML</b>，并通过剪贴板或控制台注入已登录的公众号编辑器。</p>
+      <ol>
+        <li><b>写内容</b>：粘贴 Markdown/HTML，或上传 .md / .html 文件。</li>
+        <li><b>选主题</b>：极简白 / 知乎蓝 / 掘金橙 / 科技紫 / 暖木棕 / 深夜黑。</li>
+        <li><b>转换预览</b>：右侧手机宽度实时预览。</li>
+        <li><b>注入公众号</b>（二选一）：
+          <ul>
+            <li><b>推荐</b>：点「复制到剪贴板」→ 打开 <code>mp.weixin.qq.com</code> 新建图文 → 在编辑区 <kbd>Ctrl</kbd>+<kbd>V</kbd>。</li>
+            <li><b>进阶</b>：点「生成注入代码」→ Console 粘贴运行（会<b>先检测当前登录账号</b>再注入）。</li>
+          </ul>
+        </li>
+        <li><b>检测账号</b>：点「检测登录账号」后，必须切换到 <code>mp.weixin.qq.com</code> 后台标签页，按 <kbd>F12</kbd> → Console 粘贴运行。<b>不能</b>贴在本地工具页（跨域读不到公众号 Cookie/页面）。系统会结合 DOM 后台界面、URL、Cookie 名综合判断；关键 <code>token</code> 常为 HttpOnly，JS 读不到属正常。</li>
+        <li><b>图片处理</b>：正文里的外链/本地图片必须先上传到公众号素材库，再把 URL 换成 <code>mmbiz.qpic.cn</code> 地址，否则发布后会挂。</li>
+        <li><b>外链</b>：正文超链接在公众号中经常被拦，重要链接请放到「阅读原文」。</li>
+      </ol>
+      <p>格式不会 100% 等同于浏览器渲染，但字体、颜色、间距、引用、代码块、表格等视觉效果在公众号里会保持一致。</p>
+      <div class="close-row">
+        <button type="button" class="btn" id="help-close">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/markdown.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/converter.js"></script>
+  <script src="js/clipboard.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('help-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('help-modal').classList.add('open');
+    });
+    document.getElementById('help-close').addEventListener('click', function () {
+      document.getElementById('help-modal').classList.remove('open');
+    });
+    document.getElementById('help-modal').addEventListener('click', function (e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
