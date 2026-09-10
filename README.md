@@ -1,35 +1,40 @@
 ﻿# wechat-publish-skill
 
-微信公众号发布相关 Skill：生成**可直接粘贴进公众号**的内联样式 HTML。
+微信公众号发布：**Skill 规范 + 本地 MD/HTML 转公众号工具**。
 
-## 包含
+## 目录
 
-| 目录 | 说明 |
+| 路径 | 说明 |
 |------|------|
-| [skills/wechat-publish](skills/wechat-publish/SKILL.md) | 一站式：交付内联 HTML 成品 + 主题样式 + 图片规范（默认优先） |
-| [skills/wechat-content](skills/wechat-content/SKILL.md) | 格式细则（图片四周阴影/圆角/滤镜等） |
+| [skills/wechat-publish](skills/wechat-publish/SKILL.md) | 一站式 Skill：AI 直接产出可粘贴内联 HTML |
+| [skills/wechat-content](skills/wechat-content/SKILL.md) | 格式细则（图片样式大全等） |
+| [tool/index.html](tool/index.html) | **转换工具**：浏览器直接打开即可用 |
+| [tool/js/](tool/js/) | Markdown 解析、主题、转换、剪贴板 |
+| [tool/examples/](tool/examples/) | 示例 MD/HTML |
 
-## 安装（Claude Code / 支持 SKILL.md 的客户端）
+## 工具用法（MD 自动转公众号排版）
 
-把 `skills/wechat-publish`（可选再加 `skills/wechat-content`）复制到：
+1. 下载或克隆本仓库  
+2. 用浏览器打开 `tool/index.html`（无需服务器）  
+3. 粘贴或上传 `.md` / `.html`  
+4. 选主题 → **转换** → 预览  
+5. **复制到剪贴板** → 公众号新建文章正文 `Ctrl+V`  
+
+按钮：转换 | 外链图转内嵌（需本地服务，可选）| 复制到剪贴板 | 标题/作者 | 下载 HTML  
+
+主题：`minimal` `zhihu` `juejin` `techPurple` `wood` `night`
+
+## Skill 安装
 
 ```
 ~/.claude/skills/wechat-publish/SKILL.md
 ```
 
-或在本机 MiMo Desktop 的技能目录下放置同名文件夹。
+可选：`skills/wechat-content` 作细节补充。
 
-## 产出约定（wechat-publish）
+## 说明
 
-- 正文为**已内联 style** 的 HTML 片段
-- 图片优先 `data:image/...;base64,...`
-- 作者默认「松君杂货铺」（可在生成时改）
-- 不包含自动注入/半自动发文流程；用户复制 HTML 后在公众号后台粘贴
-
-## 主题
-
-minimal / zhihu / juejin / techPurple / wood / night — 详见 SKILL.md 内样式速查。
-
-## License
-
-MIT
+- 图片优先 `data:image/...;base64` 内嵌，粘贴不易裂  
+- 作者默认可写「松君杂货铺」  
+- 本仓库**不含**自动注入/半自动发文代码  
+- License: MIT
