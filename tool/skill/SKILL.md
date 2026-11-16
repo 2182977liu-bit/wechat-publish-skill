@@ -376,7 +376,7 @@ Markdown 语法 `![...](...)` **无法携带任何样式**。需要装饰图片�
 
 ## 与「公众号注入」工具的配合
 
-项目路径：`D:\桌面\豆包\公众号注入\`（清理后只保留：`index.html`、`css/`、`js/`、`scripts/`、`examples/`、`skill/`、`tests/`、启动 cmd）
+项目路径：仓库内 `tool/` 目录（清理后只保留：`index.html`、`css/`、`js/`、`scripts/`、`examples/`、`skill/`、`tests/`、启动 cmd）
 
 ### 工具界面要点
 

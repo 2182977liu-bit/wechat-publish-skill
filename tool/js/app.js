@@ -380,7 +380,7 @@
     var fileName = 'wechat-' + theme + '.html';
     WeChatClipboard.downloadHtml(state.convertedHtml, fileName);
 
-    var py = 'C:\\Users\\18751994637\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
+    var py = 'python';
     var bat = [
       '@echo off',
       'chcp 650001 >nul',

@@ -235,7 +235,7 @@ node skills/wechat-publish/scripts/convert.js page.html --html -t night -o out.h
 成功时 stderr 类似：
 
 ```text
-Wrote D:\...\out.html (1308 chars, 0 data: imgs)
+Wrote out.html (1308 chars, 0 data: imgs)
 ```
 
 若出现：
